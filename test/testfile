@@ -1,0 +1,294 @@
+'use strict';
+const assert = require("assert");
+const isValidArgs = require('../src/inputValidation.js').isValidArgs;
+const getGroupedArguments = require('../src/inputValidation.js').getGroupedArguments;
+
+describe("testIsValidArgs", function() {
+  it("should validate cmd Arguments", function() {
+    assert.deepStrictEqual(isValidArgs(["-s","rectangle"]), true); 
+    assert.deepStrictEqual(isValidArgs(["-d","5,a"]), false); 
+    assert.deepStrictEqual(isValidArgs(["-p","diamond"]), false); 
+    assert.deepStrictEqual(isValidArgs(["-d","7"]), true); 
+  });
+});
+
+describe("testGetGroupedArgs", function() {
+  it("should group the given arguments", function() {
+    let expected = [["-s","triangle"],["-p","hollow"]];
+    let actual = getGroupedArguments(["-s","triangle","-p","hollow"]);
+    assert.deepStrictEqual(expected, actual);
+  });
+});
+
+const assert = require('assert');
+const createAngledShape = require('../src/patterns.js').createAngledShape;
+const createFilledShape = require('../src/patterns.js').createFilledShape;
+const createHollowShape = require('../src/patterns.js').createHollowShape;
+const createInterlacedShape = require('../src/patterns.js').createInterlacedShape;
+const createAlternatingShape = require('../src/patterns.js').createAlternatingShape;
+const filled = require('../src/patterns.js').filled;
+const hollow = require('../src/patterns.js').hollow;
+const alternating = require('../src/patterns.js').alternating;
+const interlaced = require('../src/patterns.js').interlaced;
+const angled = require('../src/patterns.js').angled;
+const getAngledShape = require('../src/patterns.js').getAngledShape;
+const addSpaces = require('../src/patterns.js').addSpaces;
+
+describe("testHollowShape", function() {
+  it("should generate hollow shape of given rowlengths", function() {
+    assert.deepStrictEqual(createHollowShape([1,2,3,4]),["*","**","* *","****"]);
+    assert.deepStrictEqual(createHollowShape([4,4,4,4]),["****","*  *","*  *","****"]);
+  });
+});
+
+describe("testFilledShape", function() {
+  it("", function() {
+    let expected = ["*********","*********","*********"];
+    assert.deepStrictEqual(createFilledShape([9,9,9]),expected);
+  });
+});
+
+describe("testAngledShape", function() {
+  it("", function() {
+    let expected = ['*', '/ \\', '*   *', '\\ /', '*'];
+    assert.deepStrictEqual(createAngledShape([1,3,5,3,1],5),expected); 
+  });
+});
+
+describe("testAlternatingShape", function() {
+  it("", function() {
+    let expected = ["-","++","---","++++","-----","++++++"];
+    assert.deepStrictEqual(createAlternatingShape([1,2,3,4,5,6]),expected); 
+  });
+});
+
+describe("testInterlacedShape", function() {
+  it("", function() {
+    let expected = ["+-+-+","-+-+-","+-+-+","-+-+-","+-+-+"];
+    assert.deepStrictEqual(createInterlacedShape([5,5,5,5,5]),expected);
+  });
+});
+
+describe("testFilled", function() {
+  it("", function() {
+    assert.strictEqual(filled(5),"*****");
+    assert.strictEqual(filled(1),"*");
+  });
+});
+
+describe("testHollow", function() {
+  it("", function() {
+    assert.strictEqual(hollow(5),"*   *");
+    assert.strictEqual(hollow(2),"**");
+  });
+});
+
+describe("testAlternating", function() {
+  it("", function() {
+    assert.strictEqual(alternating(5,1),"+++++");
+    assert.strictEqual(alternating(5,0),"-----");
+  });
+});
+
+describe("testInterlaced", function() {
+  it("", function() {
+    assert.strictEqual(interlaced(5,1),"-+-+-");
+    assert.strictEqual(interlaced(5,0),"+-+-+");
+  });
+});
+
+describe("testAngled", function() {
+  it("", function() {
+    assert.strictEqual(angled(5),"/   \\");
+  )assert.strictEqual(angled(3),"/ \\");
+  });
+};
+const assert = require('assert');
+const createPattern = require('../src/printPatternLib.js').createPattern;
+const parseArguments = require('../src/printPatternLib.js').parseArguments;
+const getShapeAndPattern = require('../src/printPatternLib.js').getShapeAndPattern;
+
+describe("testCreatePattern", function() {
+  it("", function() {
+    let actual = createPattern([["-s","triangle"],["-p","filled"],["-d","5"]]);
+    let expected = ["*","**","***","****","*****"];
+    assert.deepStrictEqual(actual, expected);
+    actual = createPattern([["-s","rectangle"],["-p","hollow"],["-d","4,4"]]);
+    expected = ["****","*  *","*  *","****"];
+    assert.deepStrictEqual(actual, expected);
+  });
+});
+
+describe("testParseArgs", function() {
+  it("", function() {
+    let actual = parseArguments([["-s","triangle"],["-d","5"]],["-s","diamond"]);
+    let expected = [["-s","diamond"],["-d","5"]];
+    assert.deepStrictEqual(actual,expected);
+    actual = parseArguments([["-p","filled"]],["-p","hollow"]); 
+    expected = [["-p","hollow"]];
+    assert.deepStrictEqual(actual,expected);
+  });
+});
+
+const runTests = function() {
+  testCreatePattern();
+  testParseArgs();
+};
+
+runTests();
+'use strict';
+const assert = require('assert');
+const validateRectangle = require('../src/shapePatternValidator.js').validateRectangle;
+const validateTriangle = require('../src/shapePatternValidator.js').validateTriangle;
+const validateDiamond = require('../src/shapePatternValidator.js').validateDiamond;
+const isValidDimensions = require('../src/shapePatternValidator.js').isValidDimensions;
+const isValidShape = require('../src/shapePatternValidator.js').isValidShape;
+const isValidPattern = require('../src/shapePatternValidator.js').isValidPattern;
+
+describe("testValidateRectangle", function() {
+  it("", function() {
+    let input = [["-s","rectangle"],["-p","filled"],["-d","5,6"]];
+    assert.strictEqual(validateRectangle(input), input);
+    input = [["-s","rectangle"],["-p","filled"],["-d","5"]];
+    assert.strictEqual(validateRectangle(input), 0);
+    input = [["-s","rectangle"],["-p","angled"],["-d","5,6"]];
+    assert.strictEqual(validateRectangle(input), 0);
+  });
+});
+
+describe("testValidateTriangle", function() {
+  it("", function() {
+    let input = [["-s","triangle"],["-p","filled"],["-d","5,6"]];
+    assert.strictEqual(validateTriangle(input), input);
+    input = [["-s","triangle"],["-p","angled"],["-d","5"]];
+    assert.strictEqual(validateTriangle(input), 0);
+  });
+});
+
+describe("testValidateDiamond", function() {
+  it("", function() {
+    let input = [["-s","diamond"],["-p","interlaced"],["-d","5,6"]];
+    assert.strictEqual(validateDiamond(input), input);
+    input = [["-s","diamond"],["-p","angled"],["-d","5"]];
+    assert.strictEqual(validateDiamond(input), input);
+  });
+});
+
+describe("testIsValidShape", function() {
+  it("", function() {
+    assert.strictEqual(isValidShape("triangle"), true);
+    assert.strictEqual(isValidShape("rectangle"), true);
+    assert.strictEqual(isValidShape("diamond"), true);
+    assert.strictEqual(isValidShape("square"), false);
+  });
+});
+
+describe("testIsValidPattern", function() {
+  it("", function() {
+    assert.strictEqual(isValidPattern("triangle"), false);
+    assert.strictEqual(isValidPattern("hollowed"), false);
+    assert.strictEqual(isValidPattern("angled"), true);
+    assert.strictEqual(isValidPattern("interlaced"), true);
+  });
+});
+
+describe("testIsValidDimensions", function() {
+  it("", function() {
+    assert.strictEqual(isValidDimensions("5,5"), true);
+    assert.strictEqual(isValidDimensions("-5,5"), false);
+    assert.strictEqual(isValidDimensions("3"), true);
+    assert.strictEqual(isValidDimensions("6,a"), false);
+  });
+});
+
+'use strict';
+const assert = require('assert');
+const createRectangle = require('../src/shapes.js').createRectangle;
+const createTriangle = require('../src/shapes.js').createTriangle;
+const createDiamond = require('../src/shapes.js').createDiamond;
+const createFilledShape = require('../src/patterns.js').createFilledShape;
+const createHollowShape = require('../src/patterns.js').createHollowShape;
+const createAlternatingShape = require('../src/patterns.js').createAlternatingShape;
+const createInterlacedShape = require('../src/patterns.js').createInterlacedShape;
+const createAngledShape = require('../src/patterns.js').createAngledShape;
+
+describe("testCreateRectangle", function() {
+  it("", function() {
+    let expected = ["****","****","****","****","****"];
+    assert.deepStrictEqual(createRectangle("5,4", createFilledShape), expected);
+    expected = ["****","*  *","*  *","****"];
+    assert.deepStrictEqual(createRectangle("4,4", createHollowShape), expected);
+  });
+});
+
+describe("testCreateTriangle", function() {
+  it("", function() {
+    let expected = ["-","++","---","++++","-----"];
+    assert.deepStrictEqual(createTriangle("5", createAlternatingShape), expected);
+    expected = ["+","-+","+-+","-+-+"];
+    assert.deepStrictEqual(createTriangle("4", createInterlacedShape), expected);
+  });
+});
+
+describe("testCreateDiamond", function() {
+  it("", function() {
+    let expected = ["   *","  ***"," *****","*******"," *****","  ***","   *"];
+    assert.deepStrictEqual(createDiamond("7", createFilledShape), expected);
+    expected = ["  *", " / \\", "*   *", " \\ /", "  *"];
+    assert.deepStrictEqual(createDiamond("5", createAngledShape), expected);
+  });
+});
+
+'use strict';
+const assert = require('assert');
+const find = require('../src/utilities.js').find;
+const insert = require('../src/utilities.js').insert;
+const getValue = require('../src/utilities.js').getValue;
+const update = require('../src/utilities.js').update;
+const range = require('../src/utilities.js').range;
+const isOdd = require('../src/utilities.js').isOdd;
+
+describe("testInsert", function() {
+  it("", function() {
+    let table = [["name","ram"]];
+    let expected = [["name","ram"],["age",20]];
+    assert.deepStrictEqual(insert(table,"age",20),expected);  
+  });
+});
+
+describe("testFind", function() {
+  it("", function() {
+    let table = [["name","ram"],["age",20]];
+    assert.deepStrictEqual(find(table,"age"),["age",20]);
+  });
+});
+
+describe("testGetValue", function() {
+  it("", function() {
+    let table = [["name","ram"],["age",20]];
+    assert.strictEqual(getValue(table,"name"),"ram");
+  });
+});
+
+describe("testUpdate", function() {
+  it("", function() {
+    let table = [["name","ram"],["age",20]];
+    assert.deepStrictEqual(find(table,"age"),["age",20]);
+  });
+});
+
+describe("testRange", function() {
+  it("", function() {
+    assert.deepStrictEqual(range(5),[1,2,3,4,5])
+    assert.deepStrictEqual(range(5,10),[5,6,7,8,9,10])
+    assert.deepStrictEqual(range(10,0,-2),[10,8,6,4,2,0])
+  });
+});
+
+describe("testIsOdd", function() {
+  it("", function() {
+    assert.strictEqual(isOdd(5), true)
+    assert.strictEqual(isOdd(8), false)
+  )assert.strictEqual(isOdd(0), false)
+  });
+};
