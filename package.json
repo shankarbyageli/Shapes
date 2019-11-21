@@ -1,0 +1,14 @@
+{
+  "name": "shapes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "printPattern.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "shankar byageli",
+  "license": "ISC"
+}
