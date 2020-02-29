@@ -14,7 +14,7 @@ describe("testValidateRectangle", function() {
     input = [["-s","rectangle"],["-p","filled"],["-d","5"]];
     assert.strictEqual(validateRectangle(input), 0);
     input = [["-s","rectangle"],["-p","angled"],["-d","5,6"]];
-    assert.strictEqual(validateRectangle(input), 0);
+    assert.strictEqual(validateRectangle(input), 1);
   });
 });
 
