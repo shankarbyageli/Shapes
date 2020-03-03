@@ -1,3 +1,4 @@
 .signore
 .snapshots
 .nyc_output
+node_modules
